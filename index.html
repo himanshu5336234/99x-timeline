@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Landing Page</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Alvaro Trigo Lopez" />
+		<meta name="description" content="fullPage full-screen navigation and sections control menu." />
+		<meta
+			name="keywords"
+			content="fullpage,jquery,demo,screen,fullscreen,navigation,control arrows, dots"
+		/>
+		<meta name="Resource-type" content="Document" />
+
+		<link rel="stylesheet" href="style.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<style>
+			.tl-before,
+			.tl-after {
+				height: 100vh;
+				width: 100%;
+				background-color: red;
+			}
+		</style>
+		<!--[if IE]>
+			<script type="text/javascript">
+				var console = { log: function () {} };
+			</script>
+		<![endif]-->
+	</head>
+	<body>
+		<main>
+			<div class="tl-container">
+				
+				<section id="timeline">
+					<div class="backgrounds" id="backgrounds">
+						<div id="discovery" data-acc-id="discovery-accordion" class="slide slide1"></div>
+						<div id="uiux" data-acc-id="uiux-accordion" class="slide slide2"></div>
+						<div
+							id="informationArchitecture"
+							data-acc-id="informationArchitecture-accordion"
+							class="slide slide3"
+						></div>
+						<div id="lowfidelity" data-acc-id="lowfidelity-accordion" class="slide slide4"></div>
+						<div id="uiscreens" data-acc-id="uiscreens-accordion" class="slide slide5"></div>
+					</div>
+					<div class="tl-wrapper container">
+						<div class="tl-head">
+							<h1>How we deliver exceptional work?</h1>
+						</div>
+						<dl class="stappen">
+							<div class="item" id="discovery-accordion" data-slide-id="0">
+								<dt>
+									<div class="round"></div>
+									<a href="#discovery" class="item-heading">Discovery</a>
+								</dt>
+								<dd>
+									<p>
+										A Series of Interactive sessions with the team and the stakeholders where we
+										come together to share ideas, discuss details to take your notion to final
+										product.
+									</p>
+									<h3>Timeline: 3-5 Days</h3>
+								</dd>
+							</div>
+							<div class="item" id="uiux-accordion" data-slide-id="1">
+								<dt>
+									<div class="round"></div>
+									<a href="#uiux" class="item-heading">UX & MARKET REsearch</a>
+								</dt>
+								<dd>
+									<p>
+										Every project starts with a mix of quantitive and qualitative analysis. We take
+										a look at your industry, market and competition to get a holistic outlook what’s
+										working and how we could do better.
+									</p>
+									<h4>Timeline: 1 - 2 Weeks</h4>
+								</dd>
+							</div>
+							<div class="item" id="informationArchitecture-accordion" data-slide-id="2">
+								<dt>
+									<div class="round"></div>
+									<a href="#informationArchitecture" class="item-heading"
+										>Information Architecture</a
+									>
+								</dt>
+								<dd>
+									<p>
+										We build a blueprint, with ideas, flows, interaction patterns, sketches. This
+										decides how we move the project ahead, right from weekly deliveries to the plan
+										is decided based on this.
+									</p>
+									<h4>Timeline: 1 Week</h4>
+								</dd>
+							</div>
+							<div class="item" id="lowfidelity-accordion" data-slide-id="3">
+								<dt>
+									<div class="round"></div>
+									<a href="#lowfidelity" class="item-heading">LOW-Fidelity Wireframes</a>
+								</dt>
+								<dd>
+									<p>
+										A rough skeletal version imagined with the stakeholders, journey maps, and user
+										flows. We take your idea and build the ideal flow based on the information
+										architecture and insights.
+									</p>
+									<h4>Timeline: 1 Week - 1 Month</h4>
+								</dd>
+							</div>
+							<div class="item" id="uiscreens-accordion" data-slide-id="4">
+								<dt>
+									<div class="round"></div>
+									<a href="#uiscreens" class="item-heading">UI Screens + Mockups</a>
+								</dt>
+								<dd>
+									<p>
+										The Final stage - the screens are built around a design system, a universal
+										system that can be used by developers and designers to create and prototype on
+										the go.
+									</p>
+									<h4>Timeline: 1 Week - 1 Month</h4>
+								</dd>
+							</div>
+						</dl>
+					</div>
+				</section>
+				
+			</div>
+		</main>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/throttle-debounce@3.0.1/umd/index.min.js"></script> -->
+
+		<script>
+			function throttle(fn, wait) {
+				var time = Date.now();
+				return function () {
+					if (time + wait - Date.now() < 0) {
+						fn();
+						time = Date.now();
+					}
+				};
+			}
+			let OpenAccBasedOnSlide = (activeSlide) => {
+				var activeItem = $(`[data-slide-id=${activeSlide}]`)[0];
+				if ($(activeItem).hasClass("active")) return;
+				console.log({ activeItem });
+				var otherItems = $(activeItem).siblings();
+				console.log({ otherItems });
+				otherItems.removeClass("active").children("dd").slideUp();
+				$(activeItem).addClass("active").children("dd").slideDown();
+			};
+			var prevTop = 0;
+			var $win = $("#backgrounds");
+			var winH = $win.height();
+			let sl = 0;
+			let prev = 0;
+			let bgImages = $(".backgrounds .slide");
+			let activeSlide = 0;
+			let next = $("#backgrounds").scrollTop();
+			let handleScroll = throttle(function () {
+				next = $("#backgrounds").scrollTop();
+
+				if (prev < next) {
+					activeSlide++;
+					console.log("down");
+					OpenAccBasedOnSlide(activeSlide);
+					$(".backgrounds").animate(
+						{
+							scrollTop: bgImages[0].scrollHeight * activeSlide,
+						},
+						300
+					);
+				} //scroll up
+				else if (prev > next) {
+					activeSlide--;
+					console.log("up");
+					OpenAccBasedOnSlide(activeSlide);
+
+					$(".backgrounds").animate(
+						{
+							scrollTop: bgImages[0].scrollHeight * activeSlide,
+						},
+						300
+						// scroll down
+					);
+				}
+
+				next = prev = bgImages[0].scrollHeight * activeSlide;
+			}, 1000);
+			$win.on("scroll", handleScroll).on("resize", function () {
+				// If the user resizes the window
+				winH = $(this).height(); // you'll need the new height value
+			});
+		</script>
+
+		<script>
+			jQuery.fn.simpleAccordion = function (options) {
+				options = $.extend(
+					{
+						start: 0,
+						activeClass: "active",
+						itemClass: "item",
+					},
+					options || {}
+				);
+
+				function updateView(activeItem) {
+					var otherItems = activeItem.siblings();
+					otherItems.removeClass(options.activeClass).children("dd").slideUp();
+
+					activeItem.addClass(options.activeClass).children("dd").slideDown();
+				}
+
+				return this.each(function () {
+					var $this = $(this);
+
+					var itemSelector = "." + options.itemClass;
+					var items = $(itemSelector, $this);
+					updateView(items.eq(options.start));
+
+					$this.on("click", itemSelector + ">dt", function () {
+						console.log(this);
+						var activeItem = $(this).closest(itemSelector);
+						if (activeItem.hasClass(options.activeClass)) return;
+
+						// Scroll
+						let newScrollPosition =
+							$(bgImages[activeItem.attr("data-slide-id")])[0].scrollHeight *
+							activeItem.attr("data-slide-id");
+						$(".backgrounds").unbind("scroll", handleScroll);
+						$(".backgrounds").animate(
+							{
+								scrollTop: newScrollPosition,
+							},
+							500
+						);
+
+						setTimeout(() => {
+							$(".backgrounds").bind("scroll", handleScroll);
+						}, 600);
+						next = prev = newScrollPosition;
+						updateView(activeItem);
+					});
+				});
+			};
+
+			$("dl.stappen").simpleAccordion();
+			$(window).on("hashchange", function (e) {
+				var activeItem = $(`${window.location.hash}-accordion`);
+				if (activeItem.hasClass("active")) return;
+				var otherItems = activeItem.siblings();
+				otherItems.removeClass("active").children("dd").slideUp();
+
+				activeItem.addClass("active").children("dd").slideDown();
+
+				// updateView(activeItem);
+				// myFullpage.moveTo(`${window.location.hash}`);
+			});
+		</script>
+	</body>
+</html>
